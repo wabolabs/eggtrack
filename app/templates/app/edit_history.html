@@ -1,0 +1,77 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="filters">
+    <form method="get">
+        <label>Date:</label>
+        <input type="date" name="date" class="date-input" value="{{ search_date|date:'Y-m-d' if search_date else '' }}">
+
+        <label>Hen:</label>
+        <select name="hen" onchange="this.form.submit()">
+            <option value="">-- All Hens --</option>
+            {% for hen in hens %}
+            <option value="{{ hen.id }}" {% if hen.id|stringformat:"s" == selected_hen %}selected{% endif %}>{{ hen.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Breed:</label>
+        <select name="breed" onchange="this.form.submit()">
+            <option value="">-- All Breeds --</option>
+            {% for breed in breeds %}
+            <option value="{{ breed.id }}" {% if breed.id|stringformat:"s" == selected_breed %}selected{% endif %}>{{ breed.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Color:</label>
+        <select name="color" onchange="this.form.submit()">
+            <option value="">-- All Colors --</option>
+            {% for color in colors %}
+            <option value="{{ color.id }}" {% if color.id|stringformat:"s" == selected_color %}selected{% endif %}>{{ color.name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filter</button>
+        <a href="{% url 'edit_history' %}" style="margin-left: 10px;">Clear</a>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Hen</th>
+            <th>Breed</th>
+            <th>Color</th>
+            <th>Quantity</th>
+            <th>Notes</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for log in logs %}
+        <tr>
+            <td>{{ log.date }}</td>
+            <td><strong>{{ log.hen.name }}</strong></td>
+            <td>{{ log.hen.breed.name|default:"-" }}</td>
+            <td>{{ log.hen.color.name|default:"-" }}</td>
+            <td>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <input type="number" name="quantity" value="{{ log.quantity }}" min="0" max="100" style="width: 60px;">
+                    <button type="submit" style="padding: 5px 10px; font-size: 12px;">Update</button>
+                    <input type="hidden" name="action" value="update">
+                </form>
+            </td>
+            <td>{{ log.notes|default:"-" }}</td>
+            <td>
+                <form method="post" style="display: inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="padding: 5px 10px; font-size: 12px; background: #f44336;" onclick="return confirm('Delete this entry?')">Delete</button>
+                    <input type="hidden" name="action" value="delete">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

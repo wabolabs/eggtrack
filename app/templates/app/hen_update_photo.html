@@ -1,0 +1,26 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<h2>Update Photo for {{ hen.name }}</h2>
+
+<form method="post" enctype="multipart/form-data" style="max-width: 500px; margin: 20px 0;">
+    {% csrf_token %}
+    
+    <div style="text-align: center; margin-bottom: 20px;">
+        {% if hen.photo %}
+        <img src="{{ hen.photo.url }}" alt="{{ hen.name }}" style="width: 200px; height: 200px; border-radius: 50%; object-fit: cover; border: 5px solid #4CAF50;">
+        {% else %}
+        <div style="width: 200px; height: 200px; border-radius: 50%; background: #ddd; display: flex; align-items: center; justify-content: center; font-size: 80px; border: 5px solid #4CAF50;">🐔</div>
+        {% endif %}
+    </div>
+    
+    <div class="form-group">
+        <label for="id_photo">New Photo:</label>
+        <input type="file" id="id_photo" name="photo" accept="image/*">
+        <small style="color: #666;">JPG, PNG, or GIF (recommended: 500x500px)</small>
+    </div>
+    
+    <button type="submit" class="upload-btn">Update Photo</button>
+    <a href="{% url 'hen_list' %}" style="margin-left: 10px; padding: 12px 24px; background: #999; color: white; text-decoration: none; border-radius: 5px;">Cancel</a>
+</form>
+{% endblock %}

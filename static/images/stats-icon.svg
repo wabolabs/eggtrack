@@ -1,0 +1,30 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="chartGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#667eea"/>
+      <stop offset="100%" style="stop-color:#764ba2"/>
+    </linearGradient>
+  </defs>
+  
+  <!-- Chart container -->
+  <rect x="40" y="40" width="120" height="120" rx="10" fill="#F5F5F5" stroke="#E0E0E0" stroke-width="2"/>
+  
+  <!-- Grid lines -->
+  <line x1="40" y1="160" x2="160" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="40" y1="120" x2="160" y2="120" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="40" y1="80" x2="160" y2="80" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="40" y1="40" x2="160" y2="40" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="40" y1="40" x2="40" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="80" y1="40" x2="80" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="120" y1="40" x2="120" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+  <line x1="160" y1="40" x2="160" y2="160" stroke="#E0E0E0" stroke-width="1"/>
+  
+  <!-- Bars -->
+  <rect x="55" y="100" width="20" height="60" rx="3" fill="url(#chartGrad)"/>
+  <rect x="85" y="80" width="20" height="80" rx="3" fill="url(#chartGrad)"/>
+  <rect x="115" y="120" width="20" height="40" rx="3" fill="url(#chartGrad)"/>
+  <rect x="145" y="90" width="20" height="70" rx="3" fill="url(#chartGrad)"/>
+  
+  <!-- Chart icon overlay -->
+  <circle cx="100" cy="100" r="35" fill="none" stroke="#667eea" stroke-width="3" stroke-dasharray="10,5"/>
+</svg>

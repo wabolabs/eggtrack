@@ -1,0 +1,36 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<a href="{% url 'hen_add' %}" style="display: inline-block; margin-bottom: 20px; padding: 12px 24px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Add New Hen</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Photo</th>
+            <th>Name</th>
+            <th>Breed</th>
+            <th>Color</th>
+            <th>Added</th>
+            <th>Status</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for hen in hens %}
+        <tr>
+            <td>
+                {% if hen.photo %}
+                <img src="{{ hen.photo.url }}" alt="{{ hen.name }}" class="hen-photo">
+                {% else %}
+                <div class="no-photo">🐔</div>
+                {% endif %}
+            </td>
+            <td><strong>{{ hen.name }}</strong></td>
+            <td>{{ hen.breed.name|default:"-" }}</td>
+            <td>{{ hen.color.name|default:"-" }}</td>
+            <td>{{ hen.date_added }}</td>
+            <td>{% if hen.is_active %}Active{% else %}Inactive{% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

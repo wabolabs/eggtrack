@@ -1,0 +1,35 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="form-group">
+        <label for="id_name">Name:</label>
+        <input type="text" id="id_name" name="name" required>
+    </div>
+    <div class="form-group">
+        <label for="id_breed">Breed:</label>
+        <select id="id_breed" name="breed">
+            <option value="">-- No Breed --</option>
+            {% for breed in breeds %}
+            <option value="{{ breed.id }}">{{ breed.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="id_color">Color:</label>
+        <select id="id_color" name="color">
+            <option value="">-- No Color --</option>
+            {% for color in colors %}
+            <option value="{{ color.id }}">{{ color.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="id_photo">Photo:</label>
+        <input type="file" id="id_photo" name="photo" accept="image/*">
+        <small style="color: #666;">JPG, PNG, or GIF (recommended: 500x500px)</small>
+    </div>
+    <button type="submit">Add Hen</button>
+</form>
+{% endblock %}

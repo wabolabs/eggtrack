@@ -1,0 +1,69 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<div class="stats-summary">
+    <h2>Summary: {{ start_date }} to {{ end_date }}</h2>
+    <p>Total Eggs: {{ total_eggs_all }}</p>
+</div>
+
+<div class="filters">
+    <form method="get">
+        <label>Date Range:</label>
+        <select name="date_range" onchange="this.form.submit()">
+            <option value="7" {% if date_range == '7' %}selected{% endif %}>Last 7 Days</option>
+            <option value="30" {% if date_range == '30' %}selected{% endif %}>Last 30 Days</option>
+            <option value="90" {% if date_range == '90' %}selected{% endif %}>Last 90 Days</option>
+            <option value="365" {% if date_range == '365' %}selected{% endif %}>Last 365 Days</option>
+        </select>
+
+        <label>Hen:</label>
+        <select name="hen" multiple size="4" onchange="this.form.submit()">
+            {% for hen in hens %}
+            <option value="{{ hen.id }}" {% if hen.id|stringformat:"s" in selected_hens %}selected{% endif %}>{{ hen.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Breed:</label>
+        <select name="breed" multiple size="4" onchange="this.form.submit()">
+            {% for breed in breeds %}
+            <option value="{{ breed.id }}" {% if breed.id|stringformat:"s" in selected_breeds %}selected{% endif %}>{{ breed.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label>Color:</label>
+        <select name="color" multiple size="4" onchange="this.form.submit()">
+            {% for color in colors %}
+            <option value="{{ color.id }}" {% if color.id|stringformat:"s" in selected_colors %}selected{% endif %}>{{ color.name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Filter</button>
+        <a href="{% url 'stats' %}" style="margin-left: 10px;">Clear</a>
+    </form>
+</div>
+
+<table>
+    <thead>
+        <tr>
+            <th>Hen</th>
+            <th>Breed</th>
+            <th>Color</th>
+            <th>Total Eggs</th>
+            <th>Days Laid</th>
+            <th>Daily Average</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for stat in stats_data %}
+        <tr>
+            <td><strong>{{ stat.hen.name }}</strong></td>
+            <td>{{ stat.hen.breed.name|default:"-" }}</td>
+            <td>{{ stat.hen.color.name|default:"-" }}</td>
+            <td>{{ stat.total_eggs }}</td>
+            <td>{{ stat.days_laid }}</td>
+            <td>{{ stat.daily_avg }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

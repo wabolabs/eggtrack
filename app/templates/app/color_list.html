@@ -1,0 +1,24 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<a href="{% url 'color_add' %}" style="display: inline-block; margin-bottom: 20px; padding: 12px 24px; background: #4CAF50; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">Add New Color</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Created</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for color in colors %}
+        <tr>
+            <td><strong>{{ color.name }}</strong></td>
+            <td>{{ color.description|default:"-" }}</td>
+            <td>{{ color.created_at|date:'M d, Y' }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

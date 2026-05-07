@@ -1,0 +1,16 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+<form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="hen-item {% if field.value|default:0 > 0 %}logged{% endif %}">
+        <label style="font-weight: bold;">{{ field.label }}:</label>
+        {{ field }}
+        <span style="margin-left: 10px; color: #666;">eggs</span>
+    </div>
+    {% endfor %}
+    <br>
+    <button type="submit">Save Daily Log</button>
+</form>
+{% endblock %}
