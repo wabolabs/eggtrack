@@ -17,20 +17,12 @@ A comprehensive Django application for tracking egg production from your laying 
 ### Using Docker Compose
 
 ```bash
-# Start the application
-docker-compose up -d
-
-# Create superuser (default: admin/admin123)
-docker-compose exec web bash -c "export DJANGO_SETTINGS_MODULE=eggtrack.settings && python -c 'import django; django.setup(); from django.contrib.auth.models import User; User.objects.create_superuser(\"admin\", \"admin@example.com\", \"admin123\")'"
-
-# Access the app at http://localhost:8000
+docker compose up -d
 ```
 
-**Default Login Credentials:**
-- Username: `admin`
-- Password: `admin123`
+The default `admin` / `admin123` superuser is created automatically on first start.
 
-**⚠️ Change the default password after first login!**
+**⚠️ Change the default password after first login via `/admin/`.**
 
 ### Local Development
 
