@@ -20,11 +20,17 @@ A comprehensive Django application for tracking egg production from your laying 
 # Start the application
 docker-compose up -d
 
-# Create a superuser for admin access
-docker-compose exec web python manage.py createsuperuser
+# Create superuser (default: admin/admin123)
+docker-compose exec web bash -c "export DJANGO_SETTINGS_MODULE=eggtrack.settings && python -c 'import django; django.setup(); from django.contrib.auth.models import User; User.objects.create_superuser(\"admin\", \"admin@example.com\", \"admin123\")'"
 
 # Access the app at http://localhost:8000
 ```
+
+**Default Login Credentials:**
+- Username: `admin`
+- Password: `admin123`
+
+**⚠️ Change the default password after first login!**
 
 ### Local Development
 
@@ -88,9 +94,30 @@ Access `/admin/` with superuser credentials to manage all data, including users.
 - Password validators enforced
 - CSRF protection enabled
 - SQLite database for local storage
+- Change default admin password immediately
 
 ## File Uploads
 
 - Photos are stored in `media/hens/`
 - Supported formats: JPG, PNG, GIF
 - Recommended size: 500x500 pixels
+
+## Project Structure
+
+```
+eggtrack/
+├── app/                    # Main Django app
+│   ├── models.py          # Hen, EggLog, Breed, Color models
+│   ├── views.py           # View functions
+│   ├── urls.py            # URL routing
+│   ├── admin.py           # Admin configuration
+│   └── templates/app/     # HTML templates
+├── eggtrack/             # Project settings
+│   ├── settings.py       # Django configuration
+│   └── urls.py           # Main URL routing
+├── static/               # Static files (SVG graphics)
+│   └── images/           # Custom SVG icons
+├── media/                # Uploaded photos
+├── docker-compose.yml    # Docker configuration
+└── requirements.txt      # Python dependencies
+```
