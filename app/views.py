@@ -1,3 +1,4 @@
+from datetime import timedelta, datetime
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.db.models import Sum, Q, Count
@@ -8,13 +9,13 @@ from django import forms
 
 class EggLogForm(forms.Form):
     def __init__(self, *args, **kwargs):
+        hens = kwargs.pop('hens', [])
+        today_logs = kwargs.pop('today_logs', {})
         super().__init__(*args, **kwargs)
-        self.hens = kwargs.pop('hens', [])
-        self.today_logs = kwargs.pop('today_logs', {})
-        for hen in self.hens:
+        for hen in hens:
             self.fields[f'hen_{hen.id}'] = forms.IntegerField(
                 label=hen.name,
-                initial=self.today_logs.get(hen.id, 0),
+                initial=today_logs.get(hen.id, 0),
                 min_value=0,
                 max_value=100
             )
@@ -44,6 +45,7 @@ def daily_log(request):
     form = EggLogForm(hens=hen_list, today_logs=today_logs_dict)
     
     return render(request, 'app/daily_log.html', {
+        'title': 'Daily Log',
         'hens': hen_list,
         'today': today,
         'form': form,
@@ -53,7 +55,7 @@ def daily_log(request):
 @login_required
 def hen_list(request):
     hens = Hen.objects.all().order_by('name')
-    return render(request, 'app/hen_list.html', {'hens': hens})
+    return render(request, 'app/hen_list.html', {'title': 'Hens', 'hens': hens})
 
 
 @login_required
@@ -72,7 +74,7 @@ def hen_add(request):
     
     breeds = Breed.objects.all()
     colors = Color.objects.all()
-    return render(request, 'app/hen_add.html', {'breeds': breeds, 'colors': colors})
+    return render(request, 'app/hen_add.html', {'title': 'Add Hen', 'breeds': breeds, 'colors': colors})
 
 
 @login_required
@@ -86,7 +88,7 @@ def hen_update_photo(request, hen_id):
             hen.save()
         return redirect('hen_list')
     
-    return render(request, 'app/hen_update_photo.html', {'hen': hen})
+    return render(request, 'app/hen_update_photo.html', {'title': f'Update Photo — {hen.name}', 'hen': hen})
 
 
 @login_required
@@ -97,7 +99,7 @@ def stats(request):
     
     # Default: last 30 days
     end_date = timezone.now().date()
-    start_date = end_date - timezone.timedelta(days=30)
+    start_date = end_date - timedelta(days=30)
     
     selected_hens = request.GET.getlist('hen')
     selected_breeds = request.GET.getlist('breed')
@@ -105,11 +107,11 @@ def stats(request):
     date_range = request.GET.get('date_range', '30')
     
     if date_range == '7':
-        start_date = end_date - timezone.timedelta(days=7)
+        start_date = end_date - timedelta(days=7)
     elif date_range == '90':
-        start_date = end_date - timezone.timedelta(days=90)
+        start_date = end_date - timedelta(days=90)
     elif date_range == '365':
-        start_date = end_date - timezone.timedelta(days=365)
+        start_date = end_date - timedelta(days=365)
     
     queryset = EggLog.objects.filter(date__range=[start_date, end_date])
     
@@ -142,6 +144,7 @@ def stats(request):
     total_eggs_all = queryset.aggregate(total=Sum('quantity'))['total'] or 0
     
     return render(request, 'app/stats.html', {
+        'title': 'Statistics',
         'stats_data': stats_data,
         'hens': hens,
         'breeds': breeds,
@@ -165,7 +168,7 @@ def edit_history(request):
     
     if search_date:
         try:
-            search_date = timezone.datetime.strptime(search_date, '%Y-%m-%d').date()
+            search_date = datetime.strptime(search_date, '%Y-%m-%d').date()
         except ValueError:
             search_date = None
     
@@ -206,6 +209,7 @@ def edit_history(request):
         return redirect('edit_history')
     
     return render(request, 'app/edit_history.html', {
+        'title': 'Edit History',
         'logs': queryset,
         'hens': hens,
         'breeds': breeds,
@@ -220,7 +224,7 @@ def edit_history(request):
 @login_required
 def breed_list(request):
     breeds = Breed.objects.all()
-    return render(request, 'app/breed_list.html', {'breeds': breeds})
+    return render(request, 'app/breed_list.html', {'title': 'Breeds', 'breeds': breeds})
 
 
 @login_required
@@ -231,13 +235,13 @@ def breed_add(request):
         Breed.objects.create(name=name, description=description)
         return redirect('breed_list')
     
-    return render(request, 'app/breed_add.html')
+    return render(request, 'app/breed_add.html', {'title': 'Add Breed'})
 
 
 @login_required
 def color_list(request):
     colors = Color.objects.all()
-    return render(request, 'app/color_list.html', {'colors': colors})
+    return render(request, 'app/color_list.html', {'title': 'Colors', 'colors': colors})
 
 
 @login_required
@@ -248,4 +252,4 @@ def color_add(request):
         Color.objects.create(name=name, description=description)
         return redirect('color_list')
     
-    return render(request, 'app/color_add.html')
+    return render(request, 'app/color_add.html', {'title': 'Add Color'})

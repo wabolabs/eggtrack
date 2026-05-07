@@ -4,7 +4,7 @@
 <div class="filters">
     <form method="get">
         <label>Date:</label>
-        <input type="date" name="date" class="date-input" value="{{ search_date|date:'Y-m-d' if search_date else '' }}">
+        <input type="date" name="date" class="date-input" value="{% if search_date %}{{ search_date|date:'Y-m-d' }}{% endif %}">
 
         <label>Hen:</label>
         <select name="hen" onchange="this.form.submit()">
@@ -57,17 +57,19 @@
             <td>
                 <form method="post" style="display: inline;">
                     {% csrf_token %}
+                    <input type="hidden" name="log_id" value="{{ log.id }}">
+                    <input type="hidden" name="action" value="update">
                     <input type="number" name="quantity" value="{{ log.quantity }}" min="0" max="100" style="width: 60px;">
                     <button type="submit" style="padding: 5px 10px; font-size: 12px;">Update</button>
-                    <input type="hidden" name="action" value="update">
                 </form>
             </td>
             <td>{{ log.notes|default:"-" }}</td>
             <td>
                 <form method="post" style="display: inline;">
                     {% csrf_token %}
-                    <button type="submit" style="padding: 5px 10px; font-size: 12px; background: #f44336;" onclick="return confirm('Delete this entry?')">Delete</button>
+                    <input type="hidden" name="log_id" value="{{ log.id }}">
                     <input type="hidden" name="action" value="delete">
+                    <button type="submit" style="padding: 5px 10px; font-size: 12px; background: #f44336;" onclick="return confirm('Delete this entry?')">Delete</button>
                 </form>
             </td>
         </tr>
